@@ -1,5 +1,6 @@
-<<<<<<< HEAD
 # SimpleYahtzeeApp
+
+## jhipster_simple_yahtzee_game
 
 This application was generated using JHipster 3.10.0, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v3.10.0](https://jhipster.github.io/documentation-archive/v3.10.0).
 
@@ -105,6 +106,3 @@ To set up a CI environment, consult the [Setting up Continuous Integration][] pa
 [Karma]: http://karma-runner.github.io/
 [Jasmine]: http://jasmine.github.io/2.0/introduction.html
 [Protractor]: https://angular.github.io/protractor/
-=======
-# jhipster_simple_yahtzee_game
->>>>>>> a5c45daad9b60f5b762f5f13e5e22e0f23428b43
