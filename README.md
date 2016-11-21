@@ -1,0 +1,1 @@
+# jhipster_simple_yahtzee_game
