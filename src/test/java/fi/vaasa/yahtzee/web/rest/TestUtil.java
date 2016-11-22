@@ -1,13 +1,13 @@
 package fi.vaasa.yahtzee.web.rest;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import org.springframework.http.MediaType;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.http.MediaType;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.ZonedDateTime;
 
 /**
  * Utility class for testing REST controllers.
