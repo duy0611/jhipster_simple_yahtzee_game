@@ -159,19 +159,18 @@ public class Game {
 	 * @return
 	 */
 	public boolean checkFinished() {
-		if (getGameStatus() == GameStatus.STARTED) {
-			boolean isGameFinished = true;
-			//game is finished when all players has selected all categories
-			for (Player p : getPlayers()) {
-				if (getSelectedCategories().get(p).size() < Category.values().length) {
-					isGameFinished = false;
-					break;
-				}
+		boolean isGameFinished = true;
+		
+		//game is finished when all players has selected all categories
+		for (Player p : getPlayers()) {
+			if (getSelectedCategories().get(p).size() < Category.values().length) {
+				isGameFinished = false;
+				break;
 			}
+		}
 
-			if (isGameFinished) {
-				return true;
-			}
+		if (isGameFinished) {
+			return true;
 		}
 		return false;
 	}
@@ -204,7 +203,7 @@ public class Game {
 		for (Player p : getPlayers()) {
 			if(!p.equals(currentPlayer)) {
 				int playerMove = getSelectedCategories().get(p).size();
-				if(playerMove < currentMove) {
+				if(playerMove <= currentMove) {
 					setPlayerTurn(p);
 					return;
 				}

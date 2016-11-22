@@ -175,5 +175,20 @@ public class InMemoryGameRepository {
 	public List<Game> getAll() {
 		return new ArrayList<>(gameStore.values());
 	}
+	
+	/**
+	 * Clear all games in memory
+	 */
+	public void clearAll() {
+		gameStore.clear();
+	}
+	
+	/**
+	 * Delete specific game by uuid
+	 * @param uuid
+	 */
+	public void delete(String uuid) {
+		gameStore.remove(uuid);
+	}
 	 
 }

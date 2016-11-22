@@ -3,7 +3,6 @@
 describe('administration', function () {
 
     var username = element(by.id('username'));
-    var password = element(by.id('password'));
     var accountMenu = element(by.id('account-menu'));
     var adminMenu = element(by.id('admin-menu'));
     var login = element(by.id('login'));
@@ -16,17 +15,11 @@ describe('administration', function () {
         login.click();
 
         username.sendKeys('admin');
-        password.sendKeys('admin');
         element(by.css('button[type=submit]')).click();
     });
 
     beforeEach(function () {
         adminMenu.click();
-    });
-
-    it('should load user management', function () {
-        element(by.css('[ui-sref="user-management"]')).click();
-        expect(element.all(by.css('h2')).first().getText()).toMatch(/Users/);
     });
 
     it('should load metrics', function () {

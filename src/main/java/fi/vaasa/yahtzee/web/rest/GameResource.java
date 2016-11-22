@@ -22,6 +22,7 @@ import com.codahale.metrics.annotation.Timed;
 
 import fi.vaasa.yahtzee.domain.Category;
 import fi.vaasa.yahtzee.domain.Game;
+import fi.vaasa.yahtzee.domain.GameStatus;
 import fi.vaasa.yahtzee.domain.Player;
 import fi.vaasa.yahtzee.domain.dto.GameDTO;
 import fi.vaasa.yahtzee.domain.exception.DuplicateCategoryException;
@@ -31,6 +32,7 @@ import fi.vaasa.yahtzee.domain.exception.GameNotStartedException;
 import fi.vaasa.yahtzee.domain.exception.InvalidGameException;
 import fi.vaasa.yahtzee.domain.mapper.GameMapper;
 import fi.vaasa.yahtzee.repository.InMemoryGameRepository;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Rest controller for Yahtzee game (simplified version)
@@ -47,12 +49,14 @@ public class GameResource {
 	@Autowired
 	GameMapper gameMapper;
 	
+	@ApiOperation(value = "Get all games in DB")
 	@GetMapping(value = "/games")
 	@Timed
 	public ResponseEntity<List<GameDTO>> getAllGames() {
 		return new ResponseEntity<>(gameMapper.gamesToGameDTOs(_gameRepository.getAll()), HttpStatus.OK);
 	}
 	
+	@ApiOperation(value = "Find game by UUID")
 	@GetMapping(value = "/games/{uuid}")
 	@Timed
 	public ResponseEntity<GameDTO> getGame(@PathVariable("uuid") String uuid) {
@@ -63,6 +67,7 @@ public class GameResource {
 		}
 	}
 	
+	@ApiOperation(value = "Create new game")
 	@PostMapping(value = "/games")
 	@Timed
 	public ResponseEntity<?> createNewGame(HttpServletRequest request) throws URISyntaxException {
@@ -75,6 +80,7 @@ public class GameResource {
 				.body(gameMapper.gameToGameDTO(newGame));
 	}
 	
+	@ApiOperation(value = "Join game", notes = "Let new player join existing game")
 	@PostMapping(value = "/games/{uuid}/join")
 	@Timed
 	public ResponseEntity<GameDTO> joinGame(@PathVariable("uuid") String uuid, HttpServletRequest request) {
@@ -93,6 +99,7 @@ public class GameResource {
 		}
 	}
 	
+	@ApiOperation(value = "Start game", notes = "Start game when it is ready (when it has enough players)")
 	@PostMapping(value = "/games/{uuid}/start")
 	@Timed
 	public ResponseEntity<GameDTO> startGame(@PathVariable("uuid") String uuid, HttpServletRequest request) {
@@ -111,6 +118,7 @@ public class GameResource {
 		}
 	}
 	
+	@ApiOperation(value = "Make player's move", notes = "Throw the dices and display the result to player")
 	@PostMapping(value = "/games/{uuid}/moveNext")
 	@Timed
 	public ResponseEntity<GameDTO> moveNext(@PathVariable("uuid") String uuid, HttpServletRequest request) {
@@ -132,6 +140,7 @@ public class GameResource {
 		}
 	}
 	
+	@ApiOperation(value = "Finish player's turn", notes = "Select category and finish current move for current player. Mark game as FINISHED if all the players have already moved")
 	@PostMapping(value = "/games/{uuid}/finishTurn")
 	@Timed
 	public ResponseEntity<GameDTO> finishTurn(@PathVariable("uuid") String uuid, @RequestParam("selectedCategory") Category selectedCategory, HttpServletRequest request) {
@@ -153,6 +162,24 @@ public class GameResource {
 		} catch (DuplicateCategoryException e) {
 			LOG.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@ApiOperation(value = "Get game result", notes = "Get game's final result (only when it has finished)")
+	@GetMapping(value = "/games/{uuid}/result")
+	@Timed
+	public ResponseEntity<?> getGameResult(@PathVariable("uuid") String uuid) {
+		try {
+			Game game = _gameRepository.findByUuid(uuid);
+			if(game.checkFinished() && GameStatus.FINISHED.equals(game.getGameStatus())) {
+				return new ResponseEntity<>(game.getGameResult(), HttpStatus.OK);
+			}
+			else {
+				return new ResponseEntity<>("Game is still in progress", HttpStatus.OK);
+			}
+			
+		} catch (GameNotFoundException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

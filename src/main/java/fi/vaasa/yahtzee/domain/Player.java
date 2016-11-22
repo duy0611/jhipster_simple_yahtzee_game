@@ -3,6 +3,12 @@ package fi.vaasa.yahtzee.domain;
 public class Player {
 	
 	private String playerName; //name of player
+	
+	public Player() {}
+	
+	public Player(String name) {
+		this.playerName = name;
+	}
 
 	public String getPlayerName() {
 		return playerName;
