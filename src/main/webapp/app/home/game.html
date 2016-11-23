@@ -1,0 +1,82 @@
+
+<div ng-cloak ng-if="game.gameStatus != 'FINISHED' && game.gameStatus != 'ABORTED'">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Your current's score: </h2>
+        </div>
+        <div class="col-md-8">
+            <h2>{{ yourScore }}</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Your current's dices: </h2>
+        </div>
+        <div class="col-md-8">
+            <h2>{{ yourDices.join(', ') }}</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-12" ng-if="game.gameStatus == 'STARTED' || game.gameStatus == 'WAIT_FOR_CATEGORY_SELECTED'">
+	    	<div class="btn-group" role="group" aria-label="...">
+				<button type="button" class="btn btn-default" 
+					ng-click="moveNext()"
+					ng-disabled="!isYourMove || !canRollDice">Roll dices</button>
+				<div class="btn-group" uib-dropdown>
+					<button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="!isYourMove || !canSelectCategory">						
+						Select category <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="single-button">
+						<li role="menuitem"><a ng-click="finishTurn('ACES')" ng-show="!(yourSelectedCategories.indexOf('ACES') > -1)">Aces</a></li>
+						<li role="menuitem"><a ng-click="finishTurn('TWOS')" ng-show="!(yourSelectedCategories.indexOf('TWOS') > -1)">Twos</a></li>
+						<li role="menuitem"><a ng-click="finishTurn('THREES')" ng-show="!(yourSelectedCategories.indexOf('THREES') > -1)">Threes</a></li>
+						<li role="menuitem"><a ng-click="finishTurn('FOURS')" ng-show="!(yourSelectedCategories.indexOf('FOURS') > -1)">Fours</a></li>
+						<li role="menuitem"><a ng-click="finishTurn('FIVES')" ng-show="!(yourSelectedCategories.indexOf('FIVES') > -1)">Fives</a></li>
+						<li role="menuitem"><a ng-click="finishTurn('SIXES')" ng-show="!(yourSelectedCategories.indexOf('SIXES') > -1)">Sixes</a></li>
+					</ul>
+				</div>
+			</div>
+    	</div>
+    	<div class="col-md-12" ng-if="game.gameStatus == 'READY'">
+    		<button type="button" class="btn btn-default" 
+    			ng-click="startGame()"
+    			ng-disabled="game.createdBy.playerName != vm.account.username">Start game</button>
+    	</div>
+	</div>
+    
+    <div class="row">
+		<br />
+    	<hr style="border-top: 5px solid black;"/>
+    	<br />
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Your opponent's score: </h2>
+        </div>
+        <div class="col-md-8">
+            <h2>{{ opponentScore }}</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Your opponent's dices: </h2>
+        </div>
+        <div class="col-md-8">
+            <h2>{{ opponentDices.join(', ') }}</h2>
+        </div>
+    </div>
+</div>
+
+<div ng-cloak ng-if="game.gameStatus == 'FINISHED'">
+	<h1>Game has finished!!!</h1>
+	<h2>Winner is: {{ game.gameResult.winner.playerName }}</h2>
+	<h2>Total scores: {{ game.gameResult.totalScores }}</h2>
+</div>
+
+<div ng-cloak ng-if="game.gameStatus == 'ABORTED'">
+	<h1>Game is aborted!!!</h1>
+</div>

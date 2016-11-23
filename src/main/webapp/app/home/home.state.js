@@ -21,6 +21,20 @@
                     controllerAs: 'vm'
                 }
             }
+        })
+        .state('game', {
+        	 parent: 'app',
+             url: '/game/:uuid',
+             data: {
+                 authorities: ['ROLE_USER']
+             },
+             views: {
+                 'content@': {
+                     templateUrl: 'app/home/game.html',
+                     controller: 'GameController',
+                     controllerAs: 'vm'
+                 }
+             }
         });
     }
 })();

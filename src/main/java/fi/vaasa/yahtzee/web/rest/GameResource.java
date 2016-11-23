@@ -3,6 +3,7 @@ package fi.vaasa.yahtzee.web.rest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -65,6 +66,22 @@ public class GameResource {
 		} catch (GameNotFoundException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@ApiOperation(value = "Find new game randomly")
+	@GetMapping(value = "/games/getRandomNewGame")
+	@Timed
+	public ResponseEntity<GameDTO> getRandomNewGame(HttpServletRequest request) {
+		String currentUser = request.getRemoteUser();
+		List<Game> games = _gameRepository.getAll().stream()
+				.filter(g -> g.getGameStatus().equals(GameStatus.WAITING_FOR_PLAYER) && !g.getCreatedBy().getPlayerName().equals(currentUser))
+				.collect(Collectors.toList());
+		
+		if(games != null && games.size() > 0) {
+			return new ResponseEntity<>(gameMapper.gameToGameDTO(games.get(0)), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	@ApiOperation(value = "Create new game")
